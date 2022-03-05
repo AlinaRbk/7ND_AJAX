@@ -3,6 +3,7 @@
 @section('content')
 
 <div class="container">
+
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTypeModal">
     Create type
 </button>
@@ -30,6 +31,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {{-- <button id="close-type-create-modal" type="button" class="btn btn-secondary">Close with Javascript</button> --}}
                 <button id="submit-ajax-form" type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
@@ -102,21 +104,29 @@
             <td class="col-type-title">{{$type->title}}</td>
             <td class="col-type-description">{{$type->description}}</td>
             <td>
-            <button class="btn btn-danger delete-type" type="submit" data-typeid="">DELETE</button>
-            <button type="button" class="btn btn-primary show-type" data-bs-toggle="modal" data-bs-target="#showTypeModal" data-typeid="{{$type->id}}">Show</button>
-            <button type="button" class="btn btn-secondary edit-type" data-bs-toggle="modal" data-bs-target="#editTypeModal" data-typeid="{{$type->id}}">Edit</button>
+            <td>
+              {{-- <form action={{route("type.destroy",[$type])}} method="POST"> --}}
+              
+                <button class="btn btn-danger delete-type" type="submit" data-typeid="{{$type->id}}">DELETE</button>
+                <button type="button" class="btn btn-primary show-type" data-bs-toggle="modal" data-bs-target="#showtTypeModal" data-typeid="{{$type->id}}">Show</button>
+                <button type="button" class="btn btn-secondary edit-type" data-bs-toggle="modal" data-bs-target="#editTypeModal" data-typeid="{{$type->id}}">Edit</button>
+              {{-- </form>   --}}
+
+            </td>
             </td>
         </tr>
         @endforeach
     </table>
     <table class="template">
         <tr>
-          <td class="col-type-id"></td>
-          <td class="col-type-title"></td>
-          <td class="col-type-description"></td>
-          <td>
-          <button class="btn btn-danger delete-type" type="submit" data-typeid="">DELETE</button>
-          </td>
+            <td class="col-type-id"></td>
+            <td class="col-type-title"></td>
+            <td class="col-type-description"></td>
+            <td>
+            <button class="btn btn-danger delete-type" type="submit" data-typeid="">DELETE</button>
+            <button type="button" class="btn btn-primary show-type" data-bs-toggle="modal" data-bs-target="#showtTypeModal" data-typeid="">Show</button>
+            <button type="button" class="btn btn-secondary edit-type" data-bs-toggle="modal" data-bs-target="#editTypeModal" data-typeid="">Edit</button>
+            </td>
         </tr>  
     </table>  
 
@@ -160,7 +170,7 @@ $(document).ready(function() {
         }
 
         console.log("Jquery veikia");
-        $("#submit-ajax-form").click(function() {
+        $("submit-ajax-form").click(function() {
             let type_title;
             let type_description;
 
