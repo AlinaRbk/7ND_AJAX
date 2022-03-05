@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -15,7 +16,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        
+        $articles = Article::all();
+        return view("article.index", ['articles'=>$articles]);
     }
 
     /**
@@ -34,9 +37,30 @@ class ArticleController extends Controller
      * @param  \App\Http\Requests\StoreArticleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreArticleRequest $request)
+    public function store(Request $request)
     {
         //
+    }
+    public function storeAjax(Request $request) {
+
+        $article = new Article;
+        $article->title = $request->article_title;
+        $article->description = $request->article_description;
+        $article->typeid = $request->article_typeid;
+    
+        $article->save();
+
+        $article_array = array(
+            'successMessage' => "Article stored succesfuly",
+            'articleId' => $article->id,
+            'articleTitle' => $article->title,
+            'articleDescription' => $article->description,
+            'articleTypeid' => $article->typeid,
+
+        );
+
+        $json_response =response()->json($article_array);
+        return $json_response;
     }
 
     /**
