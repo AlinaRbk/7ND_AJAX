@@ -27,8 +27,11 @@
                         <input id="article_description" class="form-control" type="text" name="article_description" />
                      </div>
                     <div class="form-group">
-                        <label for="article_typeid">Article type</label>
-                        <input id="article_typeid" class="form-control" type="text" name="article_typeid" />
+                        <select class='form-select' id="article_typeid" name="article_typeid">
+                        @foreach($types as $type)
+                        <option value="{{$type->id}}">{{$type->title}} </option>
+                        @endforeach
+                        </select>
                     </div>
                 </div> 
             </div>
@@ -44,7 +47,7 @@
 
 </div>
 
-    <table id="clients-table" class="table table-striped">
+    <table id="articles-table" class="table table-striped">
         <tr>
             <th>Id</th>
             <th>Title</th>
@@ -58,7 +61,7 @@
             <td class="col-article-description">{{$article->description}}</td>
             <td class="col-article-typeid">{{$article->typeid}}</td>
             <td>
-            <button class="btn btn-danger delete-article" type="submit" data-articleid="">DELETE</button>
+            <button class="btn btn-danger delete-article" type="submit" data-articleId="">DELETE</button>
             </td>
         </tr>
         @endforeach
@@ -71,9 +74,9 @@
           <td class="col-article-typeid"></td>
 
           <td>
-          <button class="btn btn-danger delete-article" type="submit" data-articleid="">DELETE</button>
-            <button type="button" class="btn btn-primary show-article" data-bs-toggle="modal" data-bs-target="#showarticleModal" data-articleid="">Show</button>
-            <button type="button" class="btn btn-secondary edit-article" data-bs-toggle="modal" data-bs-target="#editarticleModal" data-articleid="">Edit</button>
+          <button class="btn btn-danger delete-article" type="submit" data-articleId="">DELETE</button>
+            <button type="button" class="btn btn-primary show-article" data-bs-toggle="modal" data-bs-target="#showarticleModal" data-articleId="">Show</button>
+            <button type="button" class="btn btn-secondary edit-article" data-bs-toggle="modal" data-bs-target="#editarticleModal" data-articleId="">Edit</button>
           </td>
         </tr>  
     </table>  
@@ -89,9 +92,8 @@ $.ajaxSetup({
     }
 });
 
-$(document).ready(function() {
 
-    function createRow(articleId, articleTitle, articleDescription, articleTypeid ) {
+function createRow(articleId, articleTitle, articleDescription, articleTypeid ) {
         let html
         html += "<tr class='article"+articleId+"'>";
         html += "<td>"+articleId+"</td>";    
@@ -104,11 +106,11 @@ $(document).ready(function() {
         html += "</tr>";
         return html 
     }
-    function createRowFromHtml(articleId, articleTitle, articleDescription, articleTypeid) {
+    function createRowFromHtml(articleId, articleTitle, articleDescription, articleTypeId) {
         $(".template tr").addClass("article"+articleId);
-        $(".template .delete-article").attr('data-articleid', articleId );
-        $(".template .show-article").attr('data-articleid', articleId );
-        $(".template .edit-article").attr('data-articleid', articleId );
+        $(".template .delete-article").attr('data-articleId', articleId );
+        $(".template .show-article").attr('data-articleId', articleId );
+        $(".template .edit-article").attr('data-articleId', articleId );
         $(".template .col-article-id").html(articleId );
         $(".template .col-article-title").html(articleTitle );
         $(".template .col-article-description").html(articleDescription );
@@ -123,6 +125,7 @@ $(document).ready(function() {
             let article_title;
             let article_description;
             let article_typeid;
+
             article_title = $('#article_title').val();
             article_description = $('#article_description').val();
             article_typeid = $('#article_typeid').val();
@@ -130,10 +133,12 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             url: '{{route("article.storeAjax")}}' ,
-            data: {article_title: article_title, article_description: article_description, article_typeid: article_typeid},  },
+            data: {article_title: article_title, article_description: article_description, article_typeId: article_typeId}, 
             success: function(data) {
                 console.log(data);
-                    let html;
+                let html;
+                    //let html = "<tr><td>"+data.articleId+"<tr><td>"+data.articleTitle+"<tr><td>"+data.articleDescription+"<tr><td>"+data.articleTypeid."</td></tr>";
+                    
                     
                     html = createRowFromHtml(data.articleId, data.articleTitle, data.articleDescription, data.articleTypeid);
                     $("#articles-table").append(html);

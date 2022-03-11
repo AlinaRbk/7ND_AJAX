@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Type;
+
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use Illuminate\Http\Request;
@@ -18,7 +20,8 @@ class ArticleController extends Controller
     {
         
         $articles = Article::all();
-        return view("article.index", ['articles'=>$articles]);
+        $types = Type::all();
+        return view("article.index", ['articles'=>$articles,'types'=>$types ]);
     }
 
     /**
@@ -28,7 +31,9 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        $articles = Article::all();
+        $types = Type::all();
+        return view("article.create", ['articles'=>$articles]);
     }
 
     /**
