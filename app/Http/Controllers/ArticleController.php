@@ -31,9 +31,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $articles = Article::all();
-        $types = Type::all();
-        return view("article.create", ['articles'=>$articles]);
+       //
     }
 
     /**
@@ -51,7 +49,7 @@ class ArticleController extends Controller
         $article = new Article;
         $article->title = $request->article_title;
         $article->description = $request->article_description;
-        $article->typeid = $request->article_typeid;
+        $article->type_id = $request->article_type_id;
     
         $article->save();
 
@@ -60,7 +58,8 @@ class ArticleController extends Controller
             'articleId' => $article->id,
             'articleTitle' => $article->title,
             'articleDescription' => $article->description,
-            'articleTypeid' => $article->typeid,
+            'articleTypeId' => $article->type_id,
+            'articleTypeTitle'=>$article->articleType->title,
 
         );
 

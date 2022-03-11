@@ -146,4 +146,31 @@ class TypeController extends Controller
 
         return $json_response;
     }
+
+    public function searchAjax(Request $request) {
+
+        $searchValue = $request->searchValue;
+
+        $types = Type::query()
+        ->where('title', 'like', "%{$searchValue}%")
+        ->orWhere('description', 'like', "%{$searchValue}%")
+        ->get();
+
+        if(count($types) > 0) {
+            $types_array = array(
+                'types' => $types
+            );
+        } else {
+            $ctypes_array = array(
+                'errorMessage' => 'No types found'
+            );
+        }
+
+        
+
+        $json_response =response()->json($types_array);
+
+        return $json_response;
+
+    }
 }

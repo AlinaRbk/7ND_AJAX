@@ -2,12 +2,23 @@
 
 @section('content')
 
+<style>
+    th div {
+    cursor: pointer;
+}
+</style> 
+
 <div class="container">
 
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTypeModal">
     Create type
 </button>
 
+
+<div class="searchAjaxForm">
+    <input id="searchValue" type="text">
+    <span class="search-feedback"></span>
+</div>
 <!-- MODAL -->
 
 <div class="modal fade" id="createTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -280,6 +291,53 @@ $.ajax({
           
         });
 
+        $(document).on('input', '#searchValue', function() {
+            let searchValue = $('#searchValue').val();
+            let searchFieldCount= searchValue.length;
+            
+            if(searchFieldCount == 0) {
+            console.log("Field is empty");
+            $(".search-feedback").css('display', 'block');
+            $(".search-feedback").html("Field is empty");
+          } else if (searchFieldCount != 0 && searchFieldCount< 3 ) {
+            console.log("Min 3");
+            $(".search-feedback").css('display', 'block');
+            $(".search-feedback").html("Min 3");
+          } else {
+            $(".search-feedback").css('display', 'none');
+          console.log(searchFieldCount);
+
+          console.log(searchValue);
+         
+          $.ajax({
+                type: 'GET',
+                url: '{{route("type.searchAjax")}}'  ,
+                data: {searchValue: searchValue},
+                success: function(data) {
+
+                  if($.isEmptyObject(data.errorMessage)) {
+                    //sekmes atvejis
+                    $("#types-table").show();
+                    $("#alert").addClass("d-none");
+                    $("#types-table tbody").html('');
+                     $.each(data.types, function(key, type) {
+                          let html;
+                          html = createRowFromHtml(type.id, type.title, type.description);
+                          // console.log(html)
+                          $("#types-table tbody").append(html);
+                     });                             
+                  } else {
+                        $("#types-table").hide();
+                        $('#alert').removeClass('alert-success');
+                        $('#alert').addClass('alert-danger');
+                        $("#alert").removeClass("d-none");
+                        $("#alert").html(data.errorMessage); 
+                  }                            
+                }
+            });
+          }
+        });
+    
 
 </script>
 
