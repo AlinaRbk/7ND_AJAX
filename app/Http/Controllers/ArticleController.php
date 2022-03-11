@@ -77,6 +77,22 @@ class ArticleController extends Controller
     {
         //
     }
+    public function showAjax(Article $article) {
+        $article_array = array(
+            'successMessage' => "Article retrieved succesfuly",
+            'articleId' => $article->id,
+            'articleTitle' => $article->title,
+            'articleDescription' => $article->description,
+            'articleTypeId' => $article->type_id,
+            'articleTypeTitle' => $article->articleType->title
+
+        );
+
+        $json_response =response()->json($article_array); 
+
+        return $json_response;
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -99,6 +115,29 @@ class ArticleController extends Controller
     public function update(UpdateArticleRequest $request, Article $article)
     {
         //
+    }
+
+    public function updateAjax(Request $request, Article $article)
+    {
+        $article->title = $request->article_title;
+        $article->description = $request->article_description;
+        $article->type_id = $request->article_type_id;
+
+        $article->save();
+
+        $article_array = array(
+            'successMessage' => "Article updated succesfuly",
+            'articleId' => $article->id,
+            'articleTitle' => $article->title,
+            'articleDescription' => $article->description,
+            'articleTypeId' => $article->type_id,
+            'articleTypeTitle' => $article->articleType->title
+        );
+
+        // 
+        $json_response =response()->json($article_array); //javascript masyva
+
+        return $json_response;
     }
 
     /**
