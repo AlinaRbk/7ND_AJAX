@@ -150,4 +150,19 @@ class ArticleController extends Controller
     {
         //
     }
+
+    public function destroyAjax(Article $article)
+    {
+        $article->delete();
+
+        $success_array = array(
+            'successMessage' => "Article deleted successfuly". $article->id,
+        );
+
+        // 
+        $json_response =response()->json($success_array);
+
+        return $json_response;
+    }
+
 }

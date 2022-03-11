@@ -285,6 +285,22 @@ function createRow(articleId, articleTitle, articleDescription) {
                 }
             });
         });
+
+        $(document).on('click', '.delete-article', function() {
+            let articleid;
+            articleid = $(this).attr('data-articleid');
+            console.log(articleid);
+            $.ajax({
+                type: 'POST',// formoje method POST GET
+                url: '/articles/deleteAjax/' + articleid  ,// formoje action
+                success: function(data) {
+                   console.log(data);
+                   $('.article'+articleid).remove();
+                    $("#alert").removeClass("d-none");
+                    $("#alert").html(data.successMessage);                    
+                }
+            });
+        });
 </script>
 
 @endsection
