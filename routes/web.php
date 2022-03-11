@@ -30,6 +30,7 @@ Route::prefix('articles')->group(function() {
 
 Route::prefix('types')->group(function() {
     Route::get('', 'App\Http\Controllers\TypeController@index')->name('type.index');
+    Route::get('indexAjax', 'App\Http\Controllers\TypeController@indexAjax')->name('type.indexAjax');
     Route::post('storeAjax', 'App\Http\Controllers\TypeController@storeAjax')->name('type.storeAjax');
     Route::post('deleteAjax/{type}', 'App\Http\Controllers\TypeController@destroyAjax')->name('type.destroyAjax');
     Route::get('showAjax/{type}', 'App\Http\Controllers\TypeController@showAjax')->name('type.showAjax');

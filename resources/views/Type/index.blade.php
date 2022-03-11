@@ -14,6 +14,11 @@
     Create type
 </button>
 
+    <input id="hidden-sort" type="hidden" value="id" />
+    <input id="hidden-direction" type="hidden" value="asc" />
+
+    <div id="alert" class="alert alert-success d-none">
+    </div>   
 
 <div class="searchAjaxForm">
     <input id="searchValue" type="text">
@@ -99,16 +104,18 @@
     </div>
 
 
-    <div id="alert" class="alert alert-success d-none">
-    </div>  
+    
 
     <table id="types-table" class="table table-striped">
-   
+        <thead>
         <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
+            <th><div class="types-sort" data-sort="id" data-direction="asc">Id</div></th>
+            <th><div class="types-sort" data-sort="title" data-direction="asc">Title</div></th>
+            <th><div class="types-sort" data-sort="description" data-direction="asc">Description</div></th>
+            <th>Actions</th>
         </tr>
+        </thead>
+        <tbody>
         @foreach ($types as $type) 
         <tr class="type{{$type->id}}">
             <td class="col-type-id">{{$type->id}}</td>
@@ -124,10 +131,10 @@
         </tr>
        
         @endforeach
-       
+        </tbody>
     </table>
 
-    <table class="template">
+    <table class="template d-none">
         <tr>
             <td class="col-type-id"></td>
             <td class="col-type-title"></td>
@@ -181,20 +188,29 @@
         $("#submit-ajax-form").click(function() {
             let type_title;
             let type_description;
+            let sort;
+            let direction;
+
 
             type_title = $('#type_title').val();
             type_description = $('#type_description').val();
+            sort = $('#hidden-sort').val();
+            direction = $('#hidden-direction').val();
 
             $.ajax({
                 type: 'POST',
                 url: '{{route("type.storeAjax")}}' ,
                 data: {type_title: type_title, type_description: type_description  },
                     success: function(data) {
-                        // console.log(data);
+                        console.log(data);
+                        if($.isEmptyObject(data.errorMessage)) {
+                        $("#types-table tbody").html('');
+                     $.each(data.types, function(key, type) {
                         let html;
 
-                    html = createRowFromHtml(data.typeId, data.typeTitle, data.typeDescription);
+                    html = createRowFromHtml(type.id, type.title, type.description);
                     $("#types-table tbody").append(html);
+                    });
 
                     $("#createTypeModal").hide();
                     $('body').removeClass('modal-open');
@@ -206,9 +222,23 @@
                     
                     $('#type_title').val('');
                     $('#type_description').val('');
+               
+                         } else {
+                      console.log(data.errorMessage);
+                      console.log(data.errors);
+                      $('.create-input').removeClass('is-invalid');
+                      $('.invalid-feedback').html('');
+            
+            $.each(data.errors, function(key, error) {
+                        console.log(key);
+                        $('#'+key).addClass('is-invalid');
+                        $('.input_'+key).html("<strong>"+error+"</strong>");
+                      });
+                    }
                 }
             });
-    });
+        });
+    
         $(document).on('click', '.delete-type', function() {
             let typeId;
             typeId = $(this).attr('data-typeId');
@@ -289,6 +319,37 @@ $.ajax({
                 
             });
           
+        });
+
+        $('.types-sort').click(function() {
+          let sort;
+          let direction;
+          sort = $(this).attr('data-sort');
+          direction = $(this).attr('data-direction');
+          $("#hidden-sort").val(sort);
+          $("#hidden-direction").val(direction);
+          if(direction == 'asc') {
+            $(this).attr('data-direction', 'desc');
+          } else {
+            $(this).attr('data-direction', 'asc');
+          }
+
+          $.ajax({
+                type: 'GET',// formoje method POST GET
+                url: '{{route("type.indexAjax")}}'  ,// formoje action
+                data: {sort: sort, direction: direction },
+                success: function(data) {
+                  console.log(data.types);
+                    $("#types-table tbody").html('');
+                     $.each(data.types, function(key, type) {
+                          let html;
+                          html = createRowFromHtml(type.id, type.title, type.description);
+                          // console.log(html)
+                          $("#types-table tbody").append(html);
+                     });
+                
+                }
+            });
         });
 
         $(document).on('input', '#searchValue', function() {

@@ -28,7 +28,7 @@
                      </div>
                     <div class="form-group">
                         <label for="article_type_id">Article Type</label>
-                        <select id="article_type_id" class="form-select create-input">
+                        <select id="article_type_id" class="form-select" name="article_type_id">
                         @foreach($types as $type)
                         <option value="{{$type->id}}">{{$type->title}} </option>
                         @endforeach
@@ -71,7 +71,7 @@
         </tr>
         @endforeach
     </table>
-    <table class="template">
+    <table class="template d-none">
         <tr>
           <td class="col-article-id"></td>
           <td class="col-article-title"></td>
@@ -110,7 +110,7 @@ function createRow(articleId, articleTitle, articleDescription) {
         html += "</tr>";
         return html 
     }
-    function createRowFromHtml(articleId, articleTitle, articleDescription, articleTypeId) {
+    function createRowFromHtml(articleId, articleTitle, articleDescription, articleType) {
         $(".template tr").removeAttr("class");
         $(".template tr").addClass("article"+articleId);
         $(".template .delete-article").attr('data-articleId', articleId );
@@ -119,7 +119,7 @@ function createRow(articleId, articleTitle, articleDescription) {
         $(".template .col-article-id").html(articleId );
         $(".template .col-article-title").html(articleTitle );
         $(".template .col-article-description").html(articleDescription );
-        $(".template .col-article-type").html(articleTypeId );
+        $(".template .col-article-type").html(articleType );
           
         return $(".template tbody").html();
         }
@@ -140,12 +140,12 @@ function createRow(articleId, articleTitle, articleDescription) {
             url: '{{route("article.storeAjax")}}' ,
             data: {article_title: article_title, article_description: article_description, article_type_id: article_type_id}, 
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 let html;
                     //let html = "<tr><td>"+data.articleId+"<tr><td>"+data.articleTitle+"<tr><td>"+data.articleDescription+"<tr><td>"+data.articleTypeid."</td></tr>";
                     
                     
-                    html = createRowFromHtml(data.articleId, data.articleTitle, data.articleDescription, data.articleTypeId);
+                    html = createRowFromHtml(data.articleId, data.articleTitle, data.articleDescription, data.articleType);
                     $("#articles-table").append(html);
 
                     $("#createArticleModal").hide();
@@ -154,10 +154,11 @@ function createRow(articleId, articleTitle, articleDescription) {
                     $('body').css({overflow:'auto'});
 
                     $("#alert").removeClass("d-none");
-                    $("#alert").html(data.successMessage +" " + data.articleTitle +" " +data.articleDescription+" " +data.articleTypeId);
+                    $("#alert").html(data.successMessage +" " + data.articleTitle +" " +data.articleDescription+" " +data.articleType);
                    
                     $('#article_title').val('');
                     $('#article_description').val('');
+                    $('#article_type_id').val('');
                     
             }
         });
