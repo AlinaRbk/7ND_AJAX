@@ -24,91 +24,11 @@
     <input id="searchValue" type="text">
     <span class="search-feedback"></span>
 </div>
-<!-- MODAL -->
-
-<div class="modal fade" id="createTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create Modal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="ajaxForm">
-                    <div class="form-group">
-                        <label for="type_title">Type Title</label>
-                        <input id="type_title" class="form-control" type="text" name="type_title" />
-                    </div>
-                    <div class="form-group">
-                        <label for="type_description">Type Description</label>
-                        <input id="type_description" class="form-control" type="text" name="type_description" />
-                     </div>
-                </div> 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id="submit-ajax-form" type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="editTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Modal</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="ajaxForm">
-              <input type="hidden" id="edit_type_id" name="type_id" />
-              <div class="form-group">
-                  <label for="type_title">Type title</label>
-                  <input id="edit_type_title" class="form-control" type="text" name="type_title" />
-              </div>
-              <div class="form-group">
-                  <label for="type_description">Type Description</label>
-                  <input id="edit_type_description" class="form-control" type="text" name="type_description" />
-              </div>
-          </div> 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button id="update-type" type="button" class="btn btn-primary update-type">Update</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="showTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Show Type</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <div class="show-type-id">
-              </div>  
-              <div class="show-type-title">
-              </div>  
-              <div class="show-type-description">
-              </div>    
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    
 
     <table id="types-table" class="table table-striped">
         <thead>
         <tr>
+            
             <th><div class="types-sort" data-sort="id" data-direction="asc">Id</div></th>
             <th><div class="types-sort" data-sort="title" data-direction="asc">Title</div></th>
             <th><div class="types-sort" data-sort="description" data-direction="asc">Description</div></th>
@@ -122,8 +42,6 @@
             <td class="col-type-title">{{$type->title}}</td>
             <td class="col-type-description">{{$type->description}}</td>
             <td>
-            <td>
-              
                 <button class="btn btn-danger delete-type" type="submit" data-typeId="{{$type->id}}">DELETE</button>
                 <button type="button" class="btn btn-primary show-type" data-bs-toggle="modal" data-bs-target="#showTypeModal" data-typeId="{{$type->id}}">Show</button>
                 <button type="button" class="btn btn-secondary edit-type" data-bs-toggle="modal" data-bs-target="#editTypeModal" data-typeId="{{$type->id}}">Edit</button>
@@ -144,8 +62,12 @@
             <button type="button" class="btn btn-primary show-type" data-bs-toggle="modal" data-bs-target="#showtTypeModal" data-typeId="">Show</button>
             <button type="button" class="btn btn-secondary edit-type" data-bs-toggle="modal" data-bs-target="#editTypeModal" data-typeId="">Edit</button>
             </td>
-        </tr>  
+
+        </tr> 
+
     </table>  
+
+
 
 
 </div>
@@ -159,18 +81,6 @@
         }
     });
 
-    function createRow(typeId, typeTitle, typeDescription ) {
-        let html
-        html += "<tr class='type"+typeId+"'>";
-        html += "<td>"+typeId+"</td>";    
-        html += "<td>"+typeTitle+"</td>";  
-        html += "<td>"+typeDescription+"</td>";  
-        html += "<td>";
-        html +=  "<button class='btn btn-danger delete-type' type='submit' data-typeId='"+typeId+"'>DELETE</button>"; 
-        html +=  "</td>";
-        html += "</tr>";
-        return html 
-    }
         function createRowFromHtml(typeId, typeTitle, typeDescription) {
             $(".template tr").removeAttr("class");
             $(".template tr").addClass("type"+typeId);
@@ -180,6 +90,7 @@
           $(".template .col-type-id").html(typeId );
           $(".template .col-type-title").html(typeTitle );
           $(".template .col-type-description").html(typeDescription );
+         // $(".template input:checkbox").attr('value', typeId);
           
           return $(".template tbody").html();
         }
@@ -200,7 +111,7 @@
             $.ajax({
                 type: 'POST',
                 url: '{{route("type.storeAjax")}}' ,
-                data: {type_title: type_title, type_description: type_description  },
+                data: {type_title: type_title, type_description: type_description, sort:sort, direction:direction  },
                     success: function(data) {
                         console.log(data);
                         if($.isEmptyObject(data.errorMessage)) {
@@ -229,7 +140,7 @@
                       $('.create-input').removeClass('is-invalid');
                       $('.invalid-feedback').html('');
             
-            $.each(data.errors, function(key, error) {
+                        $.each(data.errors, function(key, error) {
                         console.log(key);
                         $('#'+key).addClass('is-invalid');
                         $('.input_'+key).html("<strong>"+error+"</strong>");
@@ -255,6 +166,8 @@
                 }
             });
         });
+
+
         $(document).on('click', '.show-type', function() {
             let typeId;
             typeId = $(this).attr('data-typeId');

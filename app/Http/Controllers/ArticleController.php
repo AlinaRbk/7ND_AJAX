@@ -19,7 +19,7 @@ class ArticleController extends Controller
     public function index()
     {
         
-        $articles = Article::all();
+        $articles = Article::sortable()->get();
         $types = Type::all();
         return view("article.index", ['articles'=>$articles,'types'=>$types ]);
     }
@@ -27,7 +27,7 @@ class ArticleController extends Controller
     public function indexAjax() {
 
         
-        $articles = Article::with()->sortable()->get();
+        $articles = Article::with('articleType')->sortable()->get();
         $article_array = array(
             'articles' => $articles
         );
@@ -183,7 +183,9 @@ class ArticleController extends Controller
 
         return $json_response;
     }
-    
+
+
+
 
     public function searchAjax(Request $request) {
 

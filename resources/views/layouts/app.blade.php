@@ -81,5 +81,8 @@
             @yield('content')
         </main>
     </div>
+
+    @extends('components.typemodal')
+    @extends('components.articlemodal')
 </body>
 </html>

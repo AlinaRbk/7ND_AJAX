@@ -7,6 +7,8 @@ use App\Http\Requests\StoreTypeRequest;
 use App\Http\Requests\UpdateTypeRequest;
 use Illuminate\Http\Request;
 
+use Validator;
+
 class TypeController extends Controller
 {
     /**
@@ -28,7 +30,7 @@ class TypeController extends Controller
 
     public function indexAjax() {
 
-        $types = Type::all()->sortable()->get();
+        $types = Type::sortable()->get();
 
         $types_array = array(
             'types' => $types
@@ -56,19 +58,50 @@ class TypeController extends Controller
     }
     public function storeAjax(Request $request) {
 
+        $input = [
+            'type_title'=> $request->type_title,
+            'type_description'=> $request->type_description,
+        ];
+
+        $rules = [
+            'type_title'=> 'required',
+            'type_description'=> 'required',
+        ];
+
+        $customMessages = [
+            'required' => "This field is required"
+        ];
+        
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $errors = $validator->messages()->get('*'); //pasiima visu ivykusiu klaidu sarasa
+            $type_array = array(
+                'errorMessage' => "validator fails",
+                'errors' => $errors
+            );
+        } else {
+
         $type = new Type;
         $type->title = $request->type_title;
         $type->description = $request->type_description;
     
         $type->save();
 
+        $sort = $request->sort ;
+        $direction = $request->direction ;
+        $types = Type::sortable([$sort => $direction ])->get();
+
+
         $type_array = array(
             'successMessage' => "Type stored succesfuly",
             'typeId' => $type->id,
             'typeTitle' => $type->title,
             'typeDescription' => $type->description,
+            'types' =>$types
         );
-
+    
+    }
         $json_response =response()->json($type_array);
         return $json_response;
     }
