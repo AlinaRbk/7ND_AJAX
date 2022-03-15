@@ -30,7 +30,7 @@ class ArticleController extends Controller
 
         
         $articles = Article::with('articleType')->sortable()->get();
-        $article_array = array(
+        $articles_array = array(
             'articles' => $articles
         );
 

@@ -31,7 +31,7 @@ th div {
                 <th><div class="articles-sort" data-sort="id" data-direction="asc">ID</div></th>
                 <th><div class="articles-sort" data-sort="title" data-direction="asc">Title</div></th>
                 <th><div class="articles-sort" data-sort="description" data-direction="asc">Description</div></th>
-                <th><div class="articles-sort" data-sort="aticleType.title" data-direction="asc">Type</div></th>
+                <th><div class="articles-sort" data-sort="articleType.title" data-direction="asc">Type</div></th>
                 <th>Action</th>
             </tr>
         </thead>
