@@ -81,6 +81,8 @@
         }
     });
 
+    $(document).ready(function() {
+
         function createRowFromHtml(typeId, typeTitle, typeDescription) {
             $(".template tr").removeAttr("class");
             $(".template tr").addClass("type"+typeId);
@@ -311,7 +313,7 @@ $.ajax({
             });
           }
         });
-    
+    })
 
 </script>
 

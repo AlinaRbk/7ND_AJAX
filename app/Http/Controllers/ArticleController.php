@@ -9,6 +9,8 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use Illuminate\Http\Request;
 
+use Validator;
+
 class ArticleController extends Controller
 {
     /**
@@ -59,6 +61,33 @@ class ArticleController extends Controller
     }
     public function storeAjax(Request $request) {
 
+        $input = [
+            'article_title'=> $request->article_title,
+            'article_description'=> $request->article_description,
+            'article_type_id'=> $request->article_type_id
+        ];
+
+        $rules = [
+            'article_title'=> 'required',
+            'article_description'=> 'required',
+            'article_type_id'=> 'required',
+        ];
+
+        $customMessages = [
+            'required' => "This field is required"
+        ];
+
+        
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+
+            $errors = $validator->messages()->get('*'); 
+            $article_array = array(
+                'errorMessage' => "validator fails",
+                'errors' => $errors
+            );
+        } else {
+
         $article = new Article;
         $article->title = $request->article_title;
         $article->description = $request->article_description;
@@ -68,7 +97,7 @@ class ArticleController extends Controller
 
         $sort = $request->sort ;
         $direction = $request->direction ;
-        $articles = Article::with()->sortable([$sort => $direction ])->get();
+        $articles = Article::with("articleType")->sortable([$sort => $direction ])->get();
 
 
         $article_array = array(
@@ -81,6 +110,7 @@ class ArticleController extends Controller
             "articles" => $articles
 
         );
+    }
 
         $json_response =response()->json($article_array);
         return $json_response;

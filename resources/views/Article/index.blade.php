@@ -28,8 +28,6 @@ th div {
     <table id="articles-table" class="table table-striped">
         <thead>
             <tr>
-            
-                <th></th>
                 <th><div class="articles-sort" data-sort="id" data-direction="asc">ID</div></th>
                 <th><div class="articles-sort" data-sort="title" data-direction="asc">Title</div></th>
                 <th><div class="articles-sort" data-sort="description" data-direction="asc">Description</div></th>
@@ -63,13 +61,12 @@ th div {
           <td class="col-article-type"></td>
 
           <td>
-          <button class="btn btn-danger delete-article" type="checkbox" data-articleId="">DELETE</button>
+          <button class="btn btn-danger delete-article" type="submit" data-articleId="">DELETE</button>
             <button type="button" class="btn btn-primary show-article" data-bs-toggle="modal" data-bs-target="#showarticleModal" data-articleId="">Show</button>
             <button type="button" class="btn btn-secondary edit-article" data-bs-toggle="modal" data-bs-target="#editarticleModal" data-articleId="">Edit</button>
           </td>
         </tr>  
     </table>  
-    <button class="btn btn-danger delete-article" type="checkbox" data-articleId="{{$article->id}}">DELETE</button>
 
 
 
@@ -83,19 +80,8 @@ $.ajaxSetup({
     }
 });
 
-
-function createRow(articleId, articleTitle, articleDescription) {
-        let html
-        html += "<tr class='article"+articleId+"'>";
-        html += "<td>"+articleId+"</td>";    
-        html += "<td>"+articleTitle+"</td>";  
-        html += "<td>"+articleDescription+"</td>";  
-        html += "<td>";
-        html +=  "<button class='btn btn-danger delete-article' type='checkbox' data-articleid='"+articleId+"'>DELETE</button>"; 
-        html +=  "</td>";
-        html += "</tr>";
-        return html 
-    }
+$(document).ready(function() {
+  
     function createRowFromHtml(articleId, articleTitle, articleDescription, articleTypeId) {
         $(".template tr").removeAttr("class");
         $(".template tr").addClass("article"+articleId);
@@ -111,7 +97,7 @@ function createRow(articleId, articleTitle, articleDescription) {
         }
 
 
-    //console.log("Jquery veikia");
+    console.log("Jquery veikia");
         $("#submit-ajax-form").click(function() {
             let article_title;
             let article_description;
@@ -138,7 +124,7 @@ function createRow(articleId, articleTitle, articleDescription) {
                       $("#articles-table tbody").html('');
                      $.each(data.articles, function(key, article) {
                           let html;
-                          html = createRowFromHtml(article.id, article.title, article.description, article.articleTypeId);
+                          html = createRowFromHtml(article.id, article.title, article.description, article.article_type.title);
                           // console.log(html)
                           $("#articles-table tbody").append(html);
                      });
@@ -334,6 +320,7 @@ function createRow(articleId, articleTitle, articleDescription) {
             });
           }
         });
+      })
     
 </script>
 

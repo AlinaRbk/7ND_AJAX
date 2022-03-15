@@ -9,15 +9,19 @@
                 <div class="ajaxForm">
                     <div class="form-group">
                         <label for="article_title">Article Title</label>
-                        <input id="article_title" class="form-control" type="text" name="article_title" />
+                        <input id="article_title" class="form-control create-input" type="text" name="article_title" />
+                        <span class="invalid-feedback input_article_title">
+                        </span>
                     </div>
                     <div class="form-group">
                         <label for="article_description">Article Description</label>
-                        <input id="article_description" class="form-control" type="text" name="article_description" />
-                     </div>
+                        <input id="article_description" class="form-control create-input" type="text" name="article_description" />
+                        <span class="invalid-feedback input_article_description">
+                        </span>
+                      </div>
                     <div class="form-group">
                         <label for="article_type_id">Article Type</label>
-                        <select id="article_type_id" class="form-select" name="article_type_id">
+                        <select id="article_type_id" class="form-select create-input" >
                         @foreach($types as $type)
                         <option value="{{$type->id}}">{{$type->title}} </option>
                         @endforeach
